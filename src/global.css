@@ -1,0 +1,23 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Condensed&family=Roboto+Mono:wght@200;400;700&display=swap');
+
+:root{
+    --text: rgb(7, 10, 17);
+    --background: rgb(226, 230, 238);
+    --primary: rgb(72, 64, 109);
+    --secondary: rgb(227, 216, 232);
+    --accent: rgb(39, 26, 45);
+}
+
+
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    color: var(--text);
+    font-family: 'Roboto Mono', sans-serif;
+}
+
+body, html{
+    min-height: 100svh;
+    background-color: var(--background);
+}
