@@ -3,7 +3,7 @@
     export let reminder:any;
 
     async function handleDone(value: boolean) {
-        console.log(reminder.id)
+        reminder.done = !reminder.done
         const { data, error } = await supabase
             .from('Reminders')
             .update({ done: !value }) // update this line
@@ -11,6 +11,13 @@
             .select()
 
         // console.log(data, error);
+    }
+
+    async function handleDelete(id: number){
+        const { data, error } = await supabase
+            .from('Reminders')
+            .delete()
+            .eq('id', id)
     }
 
 
@@ -21,8 +28,10 @@
     <h3>{reminder.description}</h3>
     <p>{reminder.dueDate || ''}</p>
     <p>{reminder.dueTime || ''}</p>
+    <p>{reminder.id}</p>
     <p>{reminder.done}</p>
     <button on:click={() => handleDone(reminder.done)}>{reminder.done ? "Mark Not Done" : "Mark Done"}</button>
+    <button on:click={() => handleDelete(reminder.id)}>Delete</button>
 
 
 

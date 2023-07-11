@@ -6,10 +6,9 @@ import { supabase } from '$lib/supabaseClient';
 function createRemindersStore(initial){
     let uid = 1;
 
-    const reminders = initial.map(({ description, dueDate, dueTime, done }) => {
+    const reminders = initial.map(({ id, created_at, description, dueDate, dueTime, done }) => {
         return {
-            id: uid++,
-            description, dueDate, dueTime, done
+            id, created_at, description, dueDate, dueTime, done
         };
     });
 
@@ -22,14 +21,13 @@ function createRemindersStore(initial){
 }
 
 async function load(){
-    const { data } = await supabase.from('Reminders').select().order('id', { ascending: true })
+    const { data } = await supabase.from('Reminders').select()
     return {
         reminders: data ?? [],
     }
 }
 
 let initReminders = await load()
-
 
 
 export const reminders = createRemindersStore(initReminders.reminders)

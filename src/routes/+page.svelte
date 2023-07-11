@@ -1,7 +1,7 @@
 <script>
 
     import { reminders } from "../reminderStore";
-    import { onMount } from "svelte";
+    import { onDestroy, onMount } from "svelte";
     import { supabase } from "$lib/supabaseClient";
     import { readable, get } from 'svelte/store'
     import Reminder from "../components/Reminder.svelte";
@@ -44,16 +44,10 @@
             ])
             .select()
 
-            console.log(data, error)
-
     }
 
-    // if (payload.eventType === 'UPDATE'){
-                    
-    //             }
-
     onMount(() => {
-        supabase
+        const Reminders = supabase
             .channel('any')
             .on('postgres_changes', { event: '*', schema: '*', table: 'Reminders' }, payload => {
                 if (payload.eventType === 'UPDATE') {
@@ -71,15 +65,26 @@
                         }
                     )
                 }
+                else if(payload.eventType === 'DELETE'){
+                    console.log(payload)
+                    reminders.update(
+                        (old) => {
+                            return old.filter((/** @type {{ id: any; }} */ rem) => rem.id !== payload.old.id)
+                        }
+                    )
+                }
                 else {
                     reminders.update((old) => [...old, payload.new])
                 }
             })
             .subscribe()
     })
+    onDestroy(() => {
+        supabase.removeAllChannels()
+    })
 
 
-    console.log($reminders)
+    
 </script>
 
 <main>
